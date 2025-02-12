@@ -15,3 +15,5 @@
 
 5. Dependency Inversion Principle (DIP):
 - ListMovieViewModel depends on the NetworkServiceProtocol abstraction, not the concrete NetworkService.
+
+<img src="https://github.com/aerdy/Simple-Solid-MVVM-iOS-SwiftUI-/blob/main/screenshot/Simulator%20Screenshot%20-%20iPhone%2016%20Pro%20-%202025-02-12%20at%2017.03.20.png" width="200">
