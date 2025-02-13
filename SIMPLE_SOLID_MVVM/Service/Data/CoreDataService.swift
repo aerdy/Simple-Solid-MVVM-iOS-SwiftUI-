@@ -31,28 +31,22 @@ class CoreDataService {
         }
     }
     
-    func fetchMovie() -> Movie {
+    func fetchMovie() -> [Movie.Results]{
         let request :NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-        
         do{
             let movieEntity = try context.fetch(request)
-            return movieEntity.map{
+            return movieEntity.map { item in
                 Movie.Results(
-                    id:Int($0.id),
-                    title:$0.title ?? "",
-                    adult:Bool($0.adult),
-                    releaseDate:$0.release_date ?? "",
-                    posterPath:$0.poster_path ?? ""
+                    id:Int(item.id),
+                    title:item.title ?? "",
+                    adult:Bool(item.adult),
+                    releaseDate:item.release_date ?? "",
+                    posterPath:item.poster_path ?? ""
                 )
             }
-            .reduce(into: Movie(results: [])){ result, item in
-                
-            }
-            
-            
         }catch{
             print("failed fetch movie... : \(error)")
-            return Movie(results: [])
+            return Movie(results: []).results
         }
     }
 }

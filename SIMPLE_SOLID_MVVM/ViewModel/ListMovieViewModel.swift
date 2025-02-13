@@ -33,7 +33,7 @@ class ListMovieViewModel: ObservableObject {
                     self?.coreDataService.saveMovie(movie: movies)
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
-                    self?.movies = self?.coreDataService.fetchMovie() ?? Movie(results: [])
+                    self?.movies = Movie(results: (self?.coreDataService.fetchMovie())! ) 
                 }
             }
             

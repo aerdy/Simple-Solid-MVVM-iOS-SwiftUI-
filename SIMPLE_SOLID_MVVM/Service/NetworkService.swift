@@ -15,7 +15,7 @@ protocol NetworkServiceProtocol{
 class NetworkService:NetworkServiceProtocol{
     func fetchListMovie(completion: @escaping (Result<Movie, any Error>) -> Void) {
         
-        let url = URL(string: "https://api.themoviedb.org/3/discover/movie")!
+        let url = URL(string: "https://api.themoviedb.org/3/discover/moviee")!
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         let queryItems: [URLQueryItem] = [
           URLQueryItem(name: "include_adult", value: "false"),
