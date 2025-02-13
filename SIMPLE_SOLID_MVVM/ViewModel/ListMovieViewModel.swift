@@ -10,6 +10,7 @@ import Foundation
 class ListMovieViewModel: ObservableObject {
     @Published var movies: Movie = Movie(results: [])
     @Published var errorMessage: String = ""
+    @Published var isLoading: Bool = false
     
     private let networkService: NetworkServiceProtocol
     
@@ -18,8 +19,12 @@ class ListMovieViewModel: ObservableObject {
     }
     
     func fetchListMovies() {
+        isLoading = true
+        errorMessage = ""
+        
         networkService.fetchListMovie{ [weak self] result in
             DispatchQueue.main.async {
+                self?.isLoading = false
                 switch result{
                 case .success(let movies):
                     self?.movies = movies
