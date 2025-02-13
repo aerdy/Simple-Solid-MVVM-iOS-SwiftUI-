@@ -13,9 +13,11 @@ class ListMovieViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     
     private let networkService: NetworkServiceProtocol
+    private let coreDataService: CoreDataService
     
-    init(networkService: NetworkServiceProtocol) {
+    init(networkService: NetworkServiceProtocol,coreDataService: CoreDataService) {
         self.networkService = networkService
+        self.coreDataService = coreDataService
     }
     
     func fetchListMovies() {
@@ -28,8 +30,10 @@ class ListMovieViewModel: ObservableObject {
                 switch result{
                 case .success(let movies):
                     self?.movies = movies
+                    self?.coreDataService.saveMovie(movie: movies)
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
+                    self?.movies = self?.coreDataService.fetchMovie() ?? Movie(results: [])
                 }
             }
             

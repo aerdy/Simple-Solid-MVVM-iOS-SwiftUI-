@@ -6,10 +6,18 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct ContentView: View {
-    @StateObject private var viewModel = ListMovieViewModel(networkService: NetworkService())
+    @Environment(\.managedObjectContext) private var context
+    @StateObject private var viewModel:ListMovieViewModel
     
+    init(){
+        let networkService = NetworkService()
+        let coreDataService = CoreDataService(context: PersistenceController.shared.container.viewContext)
+        
+        _viewModel = StateObject(wrappedValue: ListMovieViewModel(networkService: networkService , coreDataService: coreDataService))
+    }
     var body: some View {
         NavigationView {
             Group{
@@ -24,15 +32,15 @@ struct ContentView: View {
                             Text(String(movie.title))
                                 .font(.headline)
                             
-                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/original"+movie.poster_path)) { image in
+                            AsyncImage(url: URL(string: "https://image.tmdb.org/t/p/original"+movie.posterPath)) { image in
                             
                                 image.resizable()
                             } placeholder: {
                                 Color.red
                             }
-                            .frame(width: .infinity, height: 128)
+                            .frame(width: 100, height: 128)
                             .clipShape(.rect(cornerRadius: 5))
-                            Text(String(movie.release_date))
+                            Text(String(movie.releaseDate))
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                         }
@@ -45,9 +53,12 @@ struct ContentView: View {
                 viewModel.fetchListMovies()
             }
         }
+        
     }
 }
 
 #Preview {
-    ContentView()
+    let persistenceController = PersistenceController.shared
+    
+    ContentView().environment(\.managedObjectContext, persistenceController.container.viewContext)
 }

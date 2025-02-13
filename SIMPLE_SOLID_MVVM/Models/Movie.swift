@@ -11,12 +11,20 @@ struct Movie:Decodable {
     let results : [Results]
     
     struct Results:Decodable,Identifiable{
-        let title:String
         let id:Int
+        let title:String
         let adult:Bool
-        let release_date:String
-        let poster_path:String
+        let releaseDate:String
+        let posterPath:String
 
+        enum CodingKeys:String,CodingKey{
+            case id
+            case adult = "adult"
+            case title = "title"
+            case releaseDate = "release_date"
+            case posterPath = "poster_path"
+            
+        }
     }
     
 }
