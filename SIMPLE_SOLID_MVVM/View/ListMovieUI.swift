@@ -9,7 +9,7 @@ import SwiftUI
 import CoreData
 import _SwiftData_SwiftUI
 
-struct ContentView: View {
+struct ListMovieUI: View {
     @StateObject private var viewModel:ListMovieViewModel
     
     init(){
@@ -52,5 +52,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ListMovieUI()
 }

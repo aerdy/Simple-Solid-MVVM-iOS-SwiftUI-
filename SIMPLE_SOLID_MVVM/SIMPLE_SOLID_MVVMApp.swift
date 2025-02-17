@@ -10,7 +10,7 @@ import SwiftUI
 struct SIMPLE_SOLID_MVVMApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ListMovieUI()
         }
     }
 }
