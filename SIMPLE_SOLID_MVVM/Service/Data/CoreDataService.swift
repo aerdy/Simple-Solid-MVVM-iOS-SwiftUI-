@@ -6,47 +6,68 @@
 //
 
 import CoreData
+import SwiftUICore
+import SwiftData
 
 class CoreDataService {
-    private let context : NSManagedObjectContext
+
+    @MainActor
+    static let shared = CoreDataService()
     
-    init(context: NSManagedObjectContext) {
-        self.context = context
+    private let modelContainer : ModelContainer
+    private let context:ModelContext
+    
+
+    @MainActor
+    private init() {
+        let schema = Schema([
+                    Movie.self,
+        ])
+        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+
+        do {
+            modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            context = modelContainer.mainContext
+        } catch {
+            fatalError("Could not create ModelContainer: \(error)")
+        }
     }
     
-    func saveMovie(movie:Movie){
-        for item in movie.results {
-            let movieEntity = MovieEntity(context: context)
-            movieEntity.id = Int32(item.id)
-            movieEntity.title = item.title
-            movieEntity.release_date = item.releaseDate
-            movieEntity.poster_path = item.posterPath
-            movieEntity.adult = item.adult
-            
-        }
-        do{
-            try context.save()
-        }catch{
-            print("failed save movie... : \(error)")
-        }
-    }
-    
-    func fetchMovie() -> [Movie.Results]{
-        let request :NSFetchRequest<MovieEntity> = MovieEntity.fetchRequest()
-        do{
-            let movieEntity = try context.fetch(request)
-            return movieEntity.map { item in
-                Movie.Results(
-                    id:Int(item.id),
-                    title:item.title ?? "",
-                    adult:Bool(item.adult),
-                    releaseDate:item.release_date ?? "",
-                    posterPath:item.poster_path ?? ""
-                )
+    func saveMovie(movie:MovieData){
+        do {
+            for item in movie.results {
+                let movie = Movie(
+                    id: item.id,
+                    title: item.title,
+                    releaseDate: item.releaseDate,
+                    posterPath: item.posterPath,
+                    adult: item.adult)
+                context.insert(movie)
+                try context.save()
             }
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+    func fetchMovie() -> [MovieData.Results]{
+        do{
+            let descriptor = FetchDescriptor<Movie>()
+            let fetchData = try context.fetch(descriptor)
+            return fetchData.map { item in
+                print("data",item.title)
+                return MovieData.Results(
+                            id:Int(item.id),
+                            title:item.title,
+                            adult:Bool(item.adult),
+                            releaseDate:item.releaseDate,
+                            posterPath:item.posterPath
+                        )
+                    }
         }catch{
-            print("failed fetch movie... : \(error)")
-            return Movie(results: []).results
+            return []
         }
     }
 }
+
+    
+    

@@ -7,8 +7,9 @@
 
 import Foundation
 
+
 class ListMovieViewModel: ObservableObject {
-    @Published var movies: Movie = Movie(results: [])
+    @Published var movies: MovieData = MovieData(results: [])
     @Published var errorMessage: String = ""
     @Published var isLoading: Bool = false
     
@@ -33,7 +34,7 @@ class ListMovieViewModel: ObservableObject {
                     self?.coreDataService.saveMovie(movie: movies)
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
-                    self?.movies = Movie(results: (self?.coreDataService.fetchMovie())! ) 
+                    self?.movies = MovieData(results: (self?.coreDataService.fetchMovie())! )
                 }
             }
             

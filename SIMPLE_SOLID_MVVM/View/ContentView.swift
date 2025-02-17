@@ -7,25 +7,19 @@
 
 import SwiftUI
 import CoreData
+import _SwiftData_SwiftUI
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var context
     @StateObject private var viewModel:ListMovieViewModel
     
     init(){
-        let networkService = NetworkService()
-        let coreDataService = CoreDataService(context: PersistenceController.shared.container.viewContext)
-        
-        _viewModel = StateObject(wrappedValue: ListMovieViewModel(networkService: networkService , coreDataService: coreDataService))
+        _viewModel = StateObject(wrappedValue: ListMovieViewModel(networkService: NetworkService() , coreDataService: .shared))
     }
     var body: some View {
         NavigationView {
             Group{
                 if viewModel.isLoading {
                     ProgressView("Loading..")
-                }else if viewModel.movies.results.isEmpty{
-                    Text(viewModel.errorMessage)
-                        .foregroundColor(.red)
                 }else{
                     List(viewModel.movies.results) { movie in
                         VStack(alignment: .leading) {
@@ -58,7 +52,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    let persistenceController = PersistenceController.shared
-    
-    ContentView().environment(\.managedObjectContext, persistenceController.container.viewContext)
+    ContentView()
 }

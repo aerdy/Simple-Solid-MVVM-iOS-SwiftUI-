@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Movie:Decodable {
+struct MovieData:Decodable {
     let results : [Results]
     
     struct Results:Decodable,Identifiable{

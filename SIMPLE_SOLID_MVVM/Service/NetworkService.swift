@@ -8,14 +8,14 @@
 import Foundation
 
 protocol NetworkServiceProtocol{
-    func fetchListMovie(completion: @escaping (Result<Movie,Error>) -> Void)
+    func fetchListMovie(completion: @escaping (Result<MovieData,Error>) -> Void)
 }
 
 
 class NetworkService:NetworkServiceProtocol{
-    func fetchListMovie(completion: @escaping (Result<Movie, any Error>) -> Void) {
+    func fetchListMovie(completion: @escaping (Result<MovieData, any Error>) -> Void) {
         
-        let url = URL(string: "https://api.themoviedb.org/3/discover/moviee")!
+        let url = URL(string: "https://api.themoviedb.org/3/discover/movie")!
         var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
         let queryItems: [URLQueryItem] = [
           URLQueryItem(name: "include_adult", value: "false"),
@@ -48,7 +48,7 @@ class NetworkService:NetworkServiceProtocol{
             }
             
             do {
-                let movies = try JSONDecoder().decode(Movie.self, from: data)
+                let movies = try JSONDecoder().decode(MovieData.self, from: data)
                 print("success","success")
                 completion(.success(movies))
             }catch {
