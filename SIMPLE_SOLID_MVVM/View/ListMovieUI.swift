@@ -20,6 +20,11 @@ struct ListMovieUI: View {
             Group{
                 if viewModel.isLoading {
                     ProgressView("Loading..")
+                    
+                }
+                else if viewModel.movies.results.isEmpty{
+                    Text(viewModel.errorMessage)
+                                        .foregroundColor(.red)
                 }else{
                     List(viewModel.movies.results) { movie in
                         VStack(alignment: .leading) {
