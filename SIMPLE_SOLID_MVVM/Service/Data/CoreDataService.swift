@@ -54,7 +54,6 @@ class CoreDataService {
             let descriptor = FetchDescriptor<Movie>()
             let fetchData = try context.fetch(descriptor)
             return fetchData.map { item in
-                print("data",item.title)
                 return MovieData.Results(
                             id:Int(item.id),
                             title:item.title,
